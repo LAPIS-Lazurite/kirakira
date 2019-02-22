@@ -48,7 +48,12 @@ typedef struct  {
 #define LED_FUNC_SFT_R	4
 #define LED_FUNC_GUN	5
 #define LED_FUNC_GUN_R	6
-#define LED_FUNC_RB		0xFF
+#define LED_FUNC_BLOOD		7
+#define LED_FUNC_BLOOD_S	8
+#define LED_FUNC_STACK		9
+#define LED_FUNC_STACK_R	10
+#define LED_FUNC_FADE		11
+#define LED_FUNC_RB			0xFF
 
 union LED_MODE {
 	COLOR color;
@@ -225,6 +230,185 @@ uint8_t ledFuncGunR(void) {
 	}
 	return retval;
 }
+
+uint8_t ledFuncBlood(void) {
+	int i;
+	static int j=0;
+	static int k=0;
+	uint8_t retval = LED_FUNC_BLOOD;
+	if(led_mode.color.mode != 0) {
+		j=0,k=0;
+		delay_time = 15;
+		memset(led_ram,0,sizeof(led_ram));
+	}
+	if(j ==0 ) { 
+		memcpy(led_start,led_ram,sizeof(led_start));
+		for(i=0;i<LED_LENGTH;i++){
+			switch((k+i)%8) {
+				case 0:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 1:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS;
+				break;
+				case 2:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS;
+				break;
+				case 3:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 4:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 5:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 6:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 7:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+			}
+		}
+	}
+	for(i=0;i<LED_LENGTH*3;i++) {
+		led_ram[i] = map(j,0,RESOLUTION/8,led_start[i],led_target[i]);
+//		Serial.println_long(led_ram[i],DEC);
+	}
+	led.write(led_ram);
+	j++;
+	if(j>=RESOLUTION/8) {
+		j=0;
+		k++;
+		if(k>=8) k = 0;
+	}
+
+	return retval;
+}
+uint8_t ledFuncBloodS(void) {
+	int i;
+	static int j=0;
+	static int k=0;
+	uint8_t retval = LED_FUNC_BLOOD;
+	if(led_mode.color.mode != 0) {
+		j=0,k=0;
+		delay_time = 10;
+		memset(led_ram,0,sizeof(led_ram));
+	}
+	if(j ==0 ) { 
+		memcpy(led_start,led_ram,sizeof(led_start));
+		for(i=0;i<LED_LENGTH;i++){
+			switch((k+i)%8) {
+				case 0:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 1:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS;
+				break;
+				case 2:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS;
+				break;
+				case 3:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 4:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 5:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 6:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+				case 7:
+				led_target[i*3+0] = led_mode.color.g/DARKNESS/32;
+				led_target[i*3+1] = led_mode.color.r/DARKNESS/32;
+				led_target[i*3+2] = led_mode.color.b/DARKNESS/32;
+				break;
+			}
+		}
+	}
+	for(i=0;i<LED_LENGTH*3;i++) {
+		led_ram[i] = map(j,0,RESOLUTION/8,led_start[i],led_target[i]);
+//		Serial.println_long(led_ram[i],DEC);
+	}
+	led.write(led_ram);
+	j++;
+	if(j>=RESOLUTION/8) {
+		j=0;
+		k++;
+		if(k>=8) k = 0;
+	}
+
+	return retval;
+}
+uint8_t ledFuncFade(void) {
+	int i;
+	static int j=30;
+	static bool reverse = true;
+	uint8_t retval = LED_FUNC_FADE;
+	if(led_mode.color.mode != 0) {
+		j=1;
+		delay_time = 100;
+		memset(led_ram,0,sizeof(led_ram));
+	}
+	for(i=0;i<LED_LENGTH*3;i+=3) {
+		if(led_mode.color.g != 0 ) {
+			led_ram[i+0] = (led_mode.color.g/DARKNESS > j)?(led_mode.color.g/DARKNESS - j) : 0;
+		}
+		if(led_mode.color.r != 0 ) {
+			led_ram[i+1] = (led_mode.color.r/DARKNESS > j)?(led_mode.color.r/DARKNESS - j) : 0;
+		}
+		if(led_mode.color.b != 0 ) {
+			led_ram[i+2] = (led_mode.color.b/DARKNESS > j)?(led_mode.color.b/DARKNESS - j) : 0;
+		}
+	}
+	led.write(led_ram);
+	if(reverse == false ) {
+		j++;
+		if(j>=30) {
+			reverse = true;
+		}
+	} else {
+		j--;
+		if(j<=16) {
+			reverse = false;
+		}
+	}
+	return retval;
+}
+
 uint8_t ledFuncRB(void) {
 	int i;
 	static int j=0;
@@ -341,6 +525,19 @@ void loop(void)
 			case LED_FUNC_GUN_R:
 			current_func = ledFuncGunR();
 			break;			
+			case LED_FUNC_BLOOD:
+			current_func = ledFuncBlood();
+			break;
+			case LED_FUNC_BLOOD_S:
+			current_func = ledFuncBloodS();
+			break;
+			case LED_FUNC_STACK:
+			break;
+			case LED_FUNC_STACK_R:
+			break;
+			case LED_FUNC_FADE:
+			current_func = ledFuncFade();
+			break;
 			case LED_FUNC_RB:
 			current_func = ledFuncRB();
 			break;
